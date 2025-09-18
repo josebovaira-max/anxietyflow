@@ -212,7 +212,7 @@ class UIManager {
 
     initializeEventListeners() {
         // Navigation
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        document.querySelectorAll('.nav-tab').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 this.switchView(e.target.dataset.view);
             });
@@ -251,7 +251,7 @@ class UIManager {
 
     switchView(viewName) {
         // Update navigation
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        document.querySelectorAll('.nav-tab').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.view === viewName);
         });
 
@@ -264,20 +264,13 @@ class UIManager {
 
         // Load view-specific data
         switch (viewName) {
-            case 'home':
-                this.updateHomeView();
-                break;
-            case 'calendar':
-                this.updateCalendarView();
-                break;
             case 'dashboard':
                 this.updateDashboardView();
                 break;
+            case 'register':
+                break; // No special initialization needed
             case 'chat':
                 this.initializeChatView();
-                break;
-            case 'settings':
-                this.updateSettingsView();
                 break;
         }
     }
@@ -316,18 +309,16 @@ class UIManager {
         }
 
         container.innerHTML = recentEntries.map(entry => {
-            const { icon, title, details } = this.getEntryDisplayInfo(entry);
+            const { title, details } = this.getEntryDisplayInfo(entry);
             const timeAgo = this.getTimeAgo(entry.timestamp);
+            const dotClass = entry.tipo === 'episodio' ? 'crisis' : entry.tipo;
 
             return `
-                <div class="recent-entry">
-                    <div class="entry-icon ${entry.tipo === 'episodio' ? 'crisis' : entry.tipo}">
-                        <i class="fas fa-${icon}"></i>
-                    </div>
-                    <div class="entry-content">
-                        <div class="entry-title">${title}</div>
-                        <div class="entry-details">${details}</div>
-                        <div class="entry-time">${timeAgo}</div>
+                <div class="activity-item">
+                    <div class="activity-dot ${dotClass}"></div>
+                    <div class="activity-content">
+                        <div class="activity-title">${title}</div>
+                        <div class="activity-time">${timeAgo}</div>
                     </div>
                 </div>
             `;
@@ -1375,13 +1366,10 @@ class VoiceRecordingManager {
     }
 }
 
-// Initialize managers
+// Initialize simplified managers
 const uiManager = new UIManager();
-const calendarManager = new CalendarManager();
 const chatManager = new ChatAIManager();
 const dashboardManager = new DashboardManager();
-const googleCalendarManager = new GoogleCalendarManager();
-const voiceManager = new VoiceRecordingManager();
 
 // Global functions for HTML event handlers
 function openCrisisForm() {
@@ -1435,6 +1423,10 @@ function sendChatMessage() {
 
 function sendSuggestion(suggestion) {
     chatManager.sendMessage(suggestion);
+}
+
+function switchToChat() {
+    uiManager.switchView('chat');
 }
 
 function handleChatKeypress(event) {

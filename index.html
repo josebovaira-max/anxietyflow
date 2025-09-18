@@ -4,472 +4,244 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnxietyFlow - Manejo de Ansiedad y Pánico</title>
-    <link rel="stylesheet" href="styles-modern.css">
+    <link rel="stylesheet" href="styles-apple.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <h1 class="logo">
-                    <i class="fas fa-heart-pulse"></i>
-                    AnxietyFlow
-                </h1>
-                <nav class="nav">
-                    <button class="nav-btn active" data-view="home">
-                        <i class="fas fa-home"></i>
-                        Inicio
-                    </button>
-                    <button class="nav-btn" data-view="calendar">
-                        <i class="fas fa-calendar"></i>
-                        Calendario
-                    </button>
-                    <button class="nav-btn" data-view="dashboard">
-                        <i class="fas fa-chart-line"></i>
-                        Progreso
-                    </button>
-                    <button class="nav-btn" data-view="chat">
-                        <i class="fas fa-comments"></i>
-                        Chat IA
-                    </button>
-                    <button class="nav-btn" data-view="settings">
-                        <i class="fas fa-cog"></i>
-                        Config
-                    </button>
-                    <button class="nav-btn" onclick="window.open('ai-config.html', '_blank')">
-                        <i class="fas fa-brain"></i>
-                        IA Config
-                    </button>
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main">
-        <div class="container">
-            <!-- Emergency Banner -->
-            <div class="emergency-banner">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>Si sientes que estás en peligro inmediato, llama al 112 o contacta servicios de emergencia</span>
-                <button class="emergency-btn" onclick="showEmergencyResources()">
-                    <i class="fas fa-phone"></i>
-                    Recursos de Ayuda
-                </button>
-            </div>
-
-            <!-- Home View -->
-            <div id="home-view" class="view active">
-                <div class="home-header">
-                    <h2>¿Cómo te sientes hoy?</h2>
-                    <p class="subtitle">Registra tus experiencias para mejorar tu bienestar</p>
-                </div>
-
-                <div class="quick-actions">
-                    <button class="crisis-btn" onclick="openCrisisForm()">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span>Estoy en Crisis</span>
-                        <small>Registro rápido ≤30s</small>
-                    </button>
-
-                    <div class="action-grid">
-                        <button class="action-btn success" onclick="openSuccessForm()">
-                            <i class="fas fa-trophy"></i>
-                            <span>Añadir Éxito</span>
-                        </button>
-                        <button class="action-btn anticipation" onclick="openAnticipationForm()">
-                            <i class="fas fa-clock"></i>
-                            <span>Anticipación</span>
-                        </button>
-                        <button class="action-btn idea" onclick="openIdeaForm()">
-                            <i class="fas fa-lightbulb"></i>
-                            <span>Nueva Idea</span>
-                        </button>
-                        <button class="action-btn voice" onclick="startVoiceRecording()">
-                            <i class="fas fa-microphone"></i>
-                            <span>Nota de Voz</span>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="logo">
+                        <i class="fas fa-heart-pulse"></i>
+                        AnxietyFlow
+                    </h1>
+                    <div class="header-actions">
+                        <button class="header-btn" onclick="showEmergencyResources()">
+                            <i class="fas fa-phone"></i>
                         </button>
                     </div>
                 </div>
+            </div>
+        </header>
 
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-view="dashboard">Dashboard</button>
+            <button class="nav-tab" data-view="register">Registrar</button>
+            <button class="nav-tab" data-view="chat">Chat IA</button>
+        </div>
+
+        <!-- Emergency Banner -->
+        <div class="emergency-banner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Emergencia: 112 • Teléfono de la Esperanza: 717 003 717</span>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view active">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">¿Cómo te sientes hoy?</h2>
+                    <p class="dashboard-subtitle">Tu progreso de bienestar</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="resilience-index">--</span>
+                        <span class="stat-label">Resiliencia</span>
+                        <div class="stat-trend" id="resilience-trend"></div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="success-count">--</span>
+                        <span class="stat-label">Éxitos</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="avg-reduction">--%</span>
+                        <span class="stat-label">Reducción</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="episodes-count">--</span>
+                        <span class="stat-label">Episodios</span>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <h3 class="section-title">Acciones Rápidas</h3>
+                <div class="action-grid">
+                    <button class="action-btn" onclick="openCrisisForm()">
+                        <div class="action-icon crisis">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="action-content">
+                            <div class="action-title">Estoy en Crisis</div>
+                            <div class="action-subtitle">Registro rápido ≤30s</div>
+                        </div>
+                    </button>
+                    
+                    <button class="action-btn" onclick="openSuccessForm()">
+                        <div class="action-icon success">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="action-content">
+                            <div class="action-title">Añadir Éxito</div>
+                            <div class="action-subtitle">Celebra tu progreso</div>
+                        </div>
+                    </button>
+                    
+                    <button class="action-btn" onclick="switchToChat()">
+                        <div class="action-icon chat">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="action-content">
+                            <div class="action-title">Hablar con IA</div>
+                            <div class="action-subtitle">Apoyo inmediato</div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Recent Activity -->
+                <h3 class="section-title">Actividad Reciente</h3>
                 <div class="recent-activity">
-                    <h3>Actividad Reciente</h3>
-                    <div id="recent-entries" class="recent-entries">
+                    <div id="recent-entries" class="activity-list">
                         <!-- Populated by JavaScript -->
                     </div>
                 </div>
-
-                <div class="quick-stats">
-                    <div class="stat-card">
-                        <i class="fas fa-chart-line"></i>
-                        <div>
-                            <span class="stat-value" id="resilience-index">--</span>
-                            <span class="stat-label">Índice de Resiliencia</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-calendar-check"></i>
-                        <div>
-                            <span class="stat-value" id="success-count">--</span>
-                            <span class="stat-label">Éxitos este mes</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-trending-down"></i>
-                        <div>
-                            <span class="stat-value" id="avg-reduction">--%</span>
-                            <span class="stat-label">Reducción media</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Calendar View -->
-            <div id="calendar-view" class="view">
-                <div class="calendar-header">
-                    <h2>Calendario de Progreso</h2>
-                    <div class="calendar-controls">
-                        <button class="calendar-nav" onclick="previousMonth()">
-                            <i class="fas fa-chevron-left"></i>
+            <!-- Register View -->
+            <div id="register-view" class="view">
+                <div class="form-section">
+                    <h2 class="dashboard-title">Nuevo Registro</h2>
+                    <p class="dashboard-subtitle">Qué quieres registrar hoy?</p>
+                    
+                    <div class="action-grid">
+                        <button class="action-btn" onclick="openCrisisForm()">
+                            <div class="action-icon crisis">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="action-content">
+                                <div class="action-title">Crisis o Episodio</div>
+                                <div class="action-subtitle">Registro detallado de ansiedad</div>
+                            </div>
                         </button>
-                        <span id="current-month"></span>
-                        <button class="calendar-nav" onclick="nextMonth()">
-                            <i class="fas fa-chevron-right"></i>
+                        
+                        <button class="action-btn" onclick="openSuccessForm()">
+                            <div class="action-icon success">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="action-content">
+                                <div class="action-title">Éxito o Exposición</div>
+                                <div class="action-subtitle">Situación superada exitosamente</div>
+                            </div>
+                        </button>
+                        
+                        <button class="action-btn" onclick="openAnticipationForm()">
+                            <div class="action-icon idea">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="action-content">
+                                <div class="action-title">Anticipación</div>
+                                <div class="action-subtitle">Evento futuro que te preocupa</div>
+                            </div>
+                        </button>
+                        
+                        <button class="action-btn" onclick="openIdeaForm()">
+                            <div class="action-icon idea">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="action-content">
+                                <div class="action-title">Idea o Creencia</div>
+                                <div class="action-subtitle">Pensamiento para trabajar</div>
+                            </div>
                         </button>
                     </div>
                 </div>
-
-                <div class="calendar-legend">
-                    <div class="legend-item">
-                        <div class="legend-color crisis"></div>
-                        <span>Crisis/Episodio</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color managed"></div>
-                        <span>Ansiedad Manejada</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color success"></div>
-                        <span>Éxito Sin Síntomas</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color idea"></div>
-                        <span>Idea/Anticipación</span>
-                    </div>
-                </div>
-
-                <div id="calendar-grid" class="calendar-grid">
-                    <!-- Generated by JavaScript -->
-                </div>
-
-                <div id="day-detail" class="day-detail hidden">
-                    <!-- Day detail popup -->
-                </div>
             </div>
 
-            <!-- Dashboard View -->
-            <div id="dashboard-view" class="view">
-                <div class="dashboard-header">
-                    <h2>Dashboard de Progreso</h2>
-                    <div class="period-selector">
-                        <button class="period-btn active" data-period="30">30 días</button>
-                        <button class="period-btn" data-period="monthly">Mensual</button>
-                    </div>
-                </div>
 
-                <div class="metrics-grid">
-                    <div class="metric-card primary">
-                        <h3>Índice de Resiliencia</h3>
-                        <div class="metric-value">
-                            <span id="dashboard-resilience">--</span>
-                            <span class="metric-unit">/100</span>
-                        </div>
-                        <div class="metric-trend" id="resilience-trend"></div>
-                    </div>
-
-                    <div class="metric-card">
-                        <h3>Episodios</h3>
-                        <div class="metric-value">
-                            <span id="episodes-count">--</span>
-                        </div>
-                        <div class="metric-detail">
-                            Intensidad media: <span id="avg-intensity">--</span>
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <h3>Reducción Media</h3>
-                        <div class="metric-value">
-                            <span id="avg-reduction-dashboard">--%</span>
-                        </div>
-                        <div class="metric-detail">
-                            Antes → Después reestructuración
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <h3>Exposiciones</h3>
-                        <div class="metric-value">
-                            <span id="exposures-count">--</span>
-                        </div>
-                        <div class="metric-detail">
-                            Tasa de éxito: <span id="success-rate">--%</span>
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <h3>Anticipaciones Refutadas</h3>
-                        <div class="metric-value">
-                            <span id="refuted-anticipations">--%</span>
-                        </div>
-                        <div class="metric-detail">
-                            Evidencia de progreso
-                        </div>
-                    </div>
-                </div>
-
-                <div class="charts-section">
-                    <div class="chart-container">
-                        <h3>Tendencia de Intensidad</h3>
-                        <canvas id="intensity-chart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3>Disparadores Frecuentes</h3>
-                        <div id="triggers-chart" class="triggers-list"></div>
-                    </div>
-                </div>
-
-                <div class="export-section">
-                    <button class="export-btn" onclick="exportToPDF()">
-                        <i class="fas fa-file-pdf"></i>
-                        Exportar Informe PDF
-                    </button>
-                </div>
-            </div>
-
-            <!-- Chat AI View -->
+            <!-- Chat View -->
             <div id="chat-view" class="view">
-                <div class="chat-header">
-                    <h2>Asistente IA Especializado</h2>
-                    <p class="chat-disclaimer">
-                        <i class="fas fa-info-circle"></i>
-                        Este asistente ofrece apoyo educativo basado en TCC. No reemplaza atención profesional.
-                    </p>
-                </div>
-
-                <div id="chat-messages" class="chat-messages">
-                    <div class="chat-message assistant">
-                        <div class="message-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>¡Hola! Soy tu asistente especializado en manejo de ansiedad y pánico. Estoy aquí para ayudarte con:</p>
-                            <ul>
-                                <li>Reestructuración cognitiva guiada</li>
-                                <li>Técnicas de afrontamiento</li>
-                                <li>Explicación de síntomas comunes</li>
-                                <li>Planificación de micro-exposiciones</li>
-                            </ul>
-                            <p>¿En qué puedo ayudarte hoy?</p>
+                <div class="chat-container">
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="chat-message">
+                            <div class="chat-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="chat-bubble">
+                                ¡Hola! Soy tu asistente especializado en ansiedad. ¿Cómo puedo ayudarte hoy?
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="chat-input-container">
-                    <div class="chat-suggestions">
-                        <button class="suggestion-btn" onclick="sendSuggestion('¿Por qué siento que me voy a desmayar?')">
-                            ¿Por qué siento mareos?
-                        </button>
-                        <button class="suggestion-btn" onclick="sendSuggestion('¿Cómo puedo manejar el miedo en el metro?')">
-                            Miedo en transporte
-                        </button>
-                        <button class="suggestion-btn" onclick="sendSuggestion('¿Qué hago si siento taquicardia?')">
-                            Síntomas físicos
-                        </button>
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="handleChatKeypress(event)">
-                        <button onclick="sendChatMessage()">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
+                    
+                    <div class="chat-input-container">
+                        <div class="chat-input-row">
+                            <textarea id="chat-input" class="chat-input" placeholder="Escribe tu pregunta..." rows="1" onkeypress="handleChatKeypress(event)"></textarea>
+                            <button class="chat-send" onclick="sendChatMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Settings View -->
-            <div id="settings-view" class="view">
-                <div class="settings-header">
-                    <h2>Configuración</h2>
-                </div>
+        </main>
+    </div>
 
-                <div class="settings-sections">
-                    <div class="settings-section">
-                        <h3>Datos y Privacidad</h3>
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="auto-save" checked>
-                                Guardado automático
-                            </label>
-                        </div>
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="voice-notes">
-                                Habilitar notas de voz
-                            </label>
-                        </div>
-                        <div class="setting-actions">
-                            <button class="settings-btn" onclick="exportData()">
-                                <i class="fas fa-download"></i>
-                                Exportar Datos
-                            </button>
-                            <button class="settings-btn danger" onclick="clearAllData()">
-                                <i class="fas fa-trash"></i>
-                                Borrar Todos los Datos
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Notificaciones</h3>
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="daily-reminder">
-                                Recordatorio diario
-                            </label>
-                        </div>
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="event-notifications">
-                                Notificaciones de eventos
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Google Calendar</h3>
-                        <button id="google-auth-btn" class="settings-btn" onclick="authenticateGoogle()">
-                            <i class="fab fa-google"></i>
-                            Conectar Google Calendar
-                        </button>
-                        <div id="google-status" class="connection-status"></div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Recursos de Emergencia</h3>
-                        <div class="emergency-contacts">
-                            <div class="emergency-item">
-                                <strong>Emergencias:</strong> 112
-                            </div>
-                            <div class="emergency-item">
-                                <strong>Teléfono de la Esperanza:</strong> 717 003 717
-                            </div>
-                            <div class="emergency-item">
-                                <strong>Salud Mental España:</strong> 672 420 816
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modals -->
+    <!-- Crisis Modal -->
     <div id="crisis-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Registro de Crisis</h3>
+                <h3 class="modal-title">Registro de Crisis</h3>
                 <button class="modal-close" onclick="closeModal('crisis-modal')">&times;</button>
             </div>
-            <form id="crisis-form" class="modal-form">
-                <div class="form-group">
-                    <label>Situación (breve descripción)</label>
-                    <input type="text" name="situacion" placeholder="Ej: Metro, hora punta" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Intensidad actual (0-10)</label>
-                    <div class="slider-container">
-                        <input type="range" name="escala_intensidad" min="0" max="10" value="5" class="slider">
-                        <span class="slider-value">5</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Disparadores principales</label>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox" name="trigger" value="calor"> Calor</label>
-                        <label><input type="checkbox" name="trigger" value="multitud"> Multitud</label>
-                        <label><input type="checkbox" name="trigger" value="espacio_cerrado"> Espacio cerrado</label>
-                        <label><input type="checkbox" name="trigger" value="ruido"> Ruido</label>
-                        <label><input type="checkbox" name="trigger" value="altura"> Altura</label>
-                        <label><input type="checkbox" name="trigger" value="otro"> Otro</label>
-                    </div>
-                    <input type="text" name="trigger_otro" placeholder="Especificar otro disparador" class="trigger-other">
-                </div>
-
-                <div class="form-group">
-                    <label>Miedo/creencia antes (0-10)</label>
-                    <div class="slider-container">
-                        <input type="range" name="nota_antes" min="0" max="10" value="5" class="slider">
-                        <span class="slider-value">5</span>
-                    </div>
-                    <small>Ej: "Seguro que me voy a desmayar"</small>
-                </div>
-
-                <div class="form-group">
-                    <label>Síntomas experimentados</label>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox" name="sintomas" value="palpitaciones"> Palpitaciones</label>
-                        <label><input type="checkbox" name="sintomas" value="mareo"> Mareo</label>
-                        <label><input type="checkbox" name="sintomas" value="falta_aire"> Falta de aire</label>
-                        <label><input type="checkbox" name="sintomas" value="sudoracion"> Sudoración</label>
-                        <label><input type="checkbox" name="sintomas" value="temblores"> Temblores</label>
-                        <label><input type="checkbox" name="sintomas" value="nauseas"> Náuseas</label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Duración estimada (minutos)</label>
-                    <input type="number" name="duracion_estimada" min="1" max="120" placeholder="10">
-                </div>
-
-                <div class="restructuring-section">
-                    <h4>Reestructuración Cognitiva</h4>
-                    <div class="restructuring-guide">
-                        <p><strong>Paso 1:</strong> Identifica la distorsión cognitiva</p>
-                        <select name="distorsion_detectada" required>
-                            <option value="">Selecciona una distorsión</option>
-                            <option value="catastrofizacion">Catastrofización</option>
-                            <option value="todo_o_nada">Pensamiento todo o nada</option>
-                            <option value="lectura_mente">Lectura de mente</option>
-                            <option value="sobregeneralizacion">Sobregeneralización</option>
-                            <option value="magnificacion">Magnificación</option>
-                            <option value="personalizacion">Personalización</option>
-                        </select>
+            <div class="modal-body">
+                <form id="crisis-form">
+                    <div class="form-group">
+                        <label class="form-label">Situación</label>
+                        <input type="text" name="situacion" class="form-input" placeholder="Ej: Metro, hora punta" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Pensamiento alternativo más realista</label>
-                        <textarea name="pensamiento_alternativo" rows="3" 
-                                placeholder="Ej: Aunque siento mareo, nunca me he desmayado; si ocurre, puedo sentarme y respirar" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Nueva creencia después de reestructurar (0-10)</label>
+                        <label class="form-label">Intensidad (0-10)</label>
                         <div class="slider-container">
-                            <input type="range" name="nota_despues" min="0" max="10" value="5" class="slider">
+                            <input type="range" name="escala_intensidad" min="0" max="10" value="5" class="slider">
                             <span class="slider-value">5</span>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" onclick="closeModal('crisis-modal')">Cancelar</button>
-                    <button type="submit" class="btn-primary">Guardar Crisis</button>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label class="form-label">Miedo antes (0-10)</label>
+                        <div class="slider-container">
+                            <input type="range" name="nota_antes" min="0" max="10" value="5" class="slider">
+                            <span class="slider-value">5</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Pensamiento alternativo</label>
+                        <textarea name="pensamiento_alternativo" class="form-textarea" rows="3" 
+                                placeholder="Ej: Aunque siento mareo, nunca me he desmayado..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Miedo después (0-10)</label>
+                        <div class="slider-container">
+                            <input type="range" name="nota_despues" min="0" max="10" value="3" class="slider">
+                            <span class="slider-value">3</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('crisis-modal')">Cancelar</button>
+                <button type="submit" form="crisis-form" class="btn btn-primary">Guardar</button>
+            </div>
         </div>
     </div>
 
