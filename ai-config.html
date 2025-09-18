@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de IA - AnxietyFlow</title>
+    <link rel="stylesheet" href="styles-modern.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .config-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-8);
+        }
+
+        .config-header {
+            text-align: center;
+            margin-bottom: var(--space-12);
+        }
+
+        .config-header h1 {
+            font-size: var(--text-4xl);
+            font-weight: 800;
+            background: var(--gradient-calm);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-4);
+        }
+
+        .provider-cards {
+            display: grid;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .provider-card {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            border: 2px solid transparent;
+            transition: all var(--transition-base);
+        }
+
+        .provider-card.active {
+            border-color: var(--primary-500);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .provider-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .provider-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-2xl);
+            color: white;
+        }
+
+        .provider-icon.openai {
+            background: linear-gradient(135deg, #10a37f, #0d8a6b);
+        }
+
+        .provider-icon.anthropic {
+            background: linear-gradient(135deg, #d4a574, #b8935a);
+        }
+
+        .provider-icon.gemini {
+            background: linear-gradient(135deg, #4285f4, #1a73e8);
+        }
+
+        .provider-icon.ollama {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        .provider-info h3 {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+
+        .provider-info p {
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+        }
+
+        .provider-config {
+            display: none;
+        }
+
+        .provider-config.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .config-field {
+            margin-bottom: var(--space-4);
+        }
+
+        .config-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+
+        .config-field input {
+            width: 100%;
+            padding: var(--space-3);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-family: monospace;
+            font-size: var(--text-sm);
+        }
+
+        .config-field input:focus {
+            border-color: var(--primary-500);
+            outline: none;
+        }
+
+        .test-connection {
+            display: flex;
+            gap: var(--space-3);
+            align-items: center;
+            margin-top: var(--space-4);
+        }
+
+        .test-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all var(--transition-base);
+        }
+
+        .test-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .test-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .connection-status {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+
+        .connection-status.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .connection-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .connection-status.testing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .setup-instructions {
+            background: var(--gray-50);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-top: var(--space-4);
+        }
+
+        .setup-instructions h4 {
+            font-weight: 600;
+            margin-bottom: var(--space-3);
+            color: var(--gray-800);
+        }
+
+        .setup-instructions ol {
+            padding-left: var(--space-5);
+        }
+
+        .setup-instructions li {
+            margin-bottom: var(--space-2);
+            color: var(--gray-700);
+        }
+
+        .setup-instructions a {
+            color: var(--primary-600);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .setup-instructions a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: var(--space-6);
+            left: var(--space-6);
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-full);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-md);
+        }
+
+        .back-btn:hover {
+            border-color: var(--primary-500);
+            color: var(--primary-600);
+            transform: translateY(-1px);
+        }
+
+        .save-config {
+            background: var(--gradient-success);
+            color: white;
+            border: none;
+            padding: var(--space-4) var(--space-8);
+            border-radius: var(--radius-xl);
+            font-weight: 600;
+            font-size: var(--text-lg);
+            cursor: pointer;
+            width: 100%;
+            margin-top: var(--space-8);
+            transition: all var(--transition-base);
+        }
+
+        .save-config:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .privacy-notice {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin-top: var(--space-6);
+            font-size: var(--text-sm);
+            color: var(--gray-700);
+        }
+
+        .privacy-notice i {
+            color: var(--primary-600);
+            margin-right: var(--space-2);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='index.html'">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <div class="config-container">
+        <div class="config-header">
+            <h1>Configuración de IA Especializada</h1>
+            <p class="subtitle">Conecta tu aplicación con servicios de IA reales para obtener respuestas más personalizadas y naturales</p>
+        </div>
+
+        <div class="provider-cards">
+            <!-- OpenAI Configuration -->
+            <div class="provider-card" data-provider="openai">
+                <div class="provider-header">
+                    <div class="provider-icon openai">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="provider-info">
+                        <h3>OpenAI GPT</h3>
+                        <p>El modelo más popular y versátil. Excelente para conversaciones naturales.</p>
+                        <small><strong>Costo:</strong> ~$0.002 por 1K tokens | <strong>Velocidad:</strong> Rápida</small>
+                    </div>
+                </div>
+                
+                <div class="provider-config" id="config-openai">
+                    <div class="config-field">
+                        <label for="openai-key">API Key de OpenAI</label>
+                        <input type="password" id="openai-key" placeholder="sk-...">
+                    </div>
+                    
+                    <div class="config-field">
+                        <label for="openai-model">Modelo</label>
+                        <select id="openai-model">
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Recomendado)</option>
+                            <option value="gpt-4">GPT-4 (Más inteligente, más caro)</option>
+                            <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                        </select>
+                    </div>
+
+                    <div class="test-connection">
+                        <button class="test-btn" onclick="testConnection('openai')">
+                            <i class="fas fa-plug"></i>
+                            Probar Conexión
+                        </button>
+                        <div class="connection-status" id="status-openai"></div>
+                    </div>
+
+                    <div class="setup-instructions">
+                        <h4>📋 Cómo obtener tu API Key:</h4>
+                        <ol>
+                            <li>Ve a <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></li>
+                            <li>Inicia sesión o crea una cuenta</li>
+                            <li>Haz clic en "Create new secret key"</li>
+                            <li>Copia la clave y pégala arriba</li>
+                            <li>Añade crédito a tu cuenta (mínimo $5)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Anthropic Configuration -->
+            <div class="provider-card" data-provider="anthropic">
+                <div class="provider-header">
+                    <div class="provider-icon anthropic">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="provider-info">
+                        <h3>Anthropic Claude</h3>
+                        <p>IA muy segura y ética. Excelente para temas de salud mental.</p>
+                        <small><strong>Costo:</strong> ~$0.0015 por 1K tokens | <strong>Velocidad:</strong> Rápida</small>
+                    </div>
+                </div>
+                
+                <div class="provider-config" id="config-anthropic">
+                    <div class="config-field">
+                        <label for="anthropic-key">API Key de Anthropic</label>
+                        <input type="password" id="anthropic-key" placeholder="sk-ant-...">
+                    </div>
+                    
+                    <div class="config-field">
+                        <label for="anthropic-model">Modelo</label>
+                        <select id="anthropic-model">
+                            <option value="claude-3-haiku-20240307">Claude 3 Haiku (Rápido y económico)</option>
+                            <option value="claude-3-sonnet-20240229">Claude 3 Sonnet (Balanceado)</option>
+                            <option value="claude-3-opus-20240229">Claude 3 Opus (Más inteligente)</option>
+                        </select>
+                    </div>
+
+                    <div class="test-connection">
+                        <button class="test-btn" onclick="testConnection('anthropic')">
+                            <i class="fas fa-plug"></i>
+                            Probar Conexión
+                        </button>
+                        <div class="connection-status" id="status-anthropic"></div>
+                    </div>
+
+                    <div class="setup-instructions">
+                        <h4>📋 Cómo obtener tu API Key:</h4>
+                        <ol>
+                            <li>Ve a <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a></li>
+                            <li>Crea una cuenta o inicia sesión</li>
+                            <li>Ve a "API Keys" en el menú</li>
+                            <li>Haz clic en "Create Key"</li>
+                            <li>Añade crédito a tu cuenta</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Gemini Configuration -->
+            <div class="provider-card" data-provider="gemini">
+                <div class="provider-header">
+                    <div class="provider-icon gemini">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="provider-info">
+                        <h3>Google Gemini</h3>
+                        <p>IA de Google con excelente comprensión contextual.</p>
+                        <small><strong>Costo:</strong> Gratis hasta 15 RPM | <strong>Velocidad:</strong> Muy rápida</small>
+                    </div>
+                </div>
+                
+                <div class="provider-config" id="config-gemini">
+                    <div class="config-field">
+                        <label for="gemini-key">API Key de Google AI Studio</label>
+                        <input type="password" id="gemini-key" placeholder="AIza...">
+                    </div>
+
+                    <div class="test-connection">
+                        <button class="test-btn" onclick="testConnection('gemini')">
+                            <i class="fas fa-plug"></i>
+                            Probar Conexión
+                        </button>
+                        <div class="connection-status" id="status-gemini"></div>
+                    </div>
+
+                    <div class="setup-instructions">
+                        <h4>📋 Cómo obtener tu API Key:</h4>
+                        <ol>
+                            <li>Ve a <a href="https://makersuite.google.com/app/apikey" target="_blank">makersuite.google.com/app/apikey</a></li>
+                            <li>Inicia sesión con tu cuenta de Google</li>
+                            <li>Haz clic en "Create API Key"</li>
+                            <li>Copia la clave y pégala arriba</li>
+                            <li>¡Es gratis para uso personal!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ollama Configuration -->
+            <div class="provider-card" data-provider="ollama">
+                <div class="provider-header">
+                    <div class="provider-icon ollama">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="provider-info">
+                        <h3>Ollama (Local)</h3>
+                        <p>IA que funciona en tu computadora. 100% privado, sin internet.</p>
+                        <small><strong>Costo:</strong> Gratis | <strong>Velocidad:</strong> Depende de tu PC</small>
+                    </div>
+                </div>
+                
+                <div class="provider-config" id="config-ollama">
+                    <div class="config-field">
+                        <label for="ollama-url">URL del servidor Ollama</label>
+                        <input type="text" id="ollama-url" value="http://localhost:11434" placeholder="http://localhost:11434">
+                    </div>
+                    
+                    <div class="config-field">
+                        <label for="ollama-model">Modelo instalado</label>
+                        <select id="ollama-model">
+                            <option value="llama2:7b-chat">Llama 2 7B Chat</option>
+                            <option value="mistral:7b">Mistral 7B</option>
+                            <option value="codellama:7b">CodeLlama 7B</option>
+                            <option value="neural-chat:7b">Neural Chat 7B</option>
+                        </select>
+                    </div>
+
+                    <div class="test-connection">
+                        <button class="test-btn" onclick="testConnection('ollama')">
+                            <i class="fas fa-plug"></i>
+                            Probar Conexión
+                        </button>
+                        <div class="connection-status" id="status-ollama"></div>
+                    </div>
+
+                    <div class="setup-instructions">
+                        <h4>📋 Cómo instalar Ollama:</h4>
+                        <ol>
+                            <li>Descarga Ollama desde <a href="https://ollama.ai/" target="_blank">ollama.ai</a></li>
+                            <li>Instala la aplicación en tu computadora</li>
+                            <li>Abre terminal/cmd y ejecuta: <code>ollama pull llama2:7b-chat</code></li>
+                            <li>Inicia el servidor: <code>ollama serve</code></li>
+                            <li>¡Listo! Tu IA funciona sin internet</li>
+                        </ol>
+                        <p><strong>Requisitos:</strong> 8GB RAM mínimo, 16GB recomendado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="privacy-notice">
+            <i class="fas fa-shield-alt"></i>
+            <strong>Privacidad:</strong> Tus API keys se guardan solo en tu navegador y nunca se envían a nuestros servidores. 
+            Las conversaciones se procesan directamente con el proveedor de IA que elijas.
+        </div>
+
+        <button class="save-config" onclick="saveConfiguration()">
+            <i class="fas fa-save"></i>
+            Guardar Configuración
+        </button>
+    </div>
+
+    <script src="chat-ai-real.js"></script>
+    <script>
+        let realAI = new RealAIChatManager();
+        let activeProvider = 'openai';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            realAI.loadAPIKeys();
+            loadConfiguration();
+            setupProviderSelection();
+        });
+
+        function setupProviderSelection() {
+            document.querySelectorAll('.provider-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const provider = this.dataset.provider;
+                    selectProvider(provider);
+                });
+            });
+        }
+
+        function selectProvider(provider) {
+            // Update active provider
+            activeProvider = provider;
+            
+            // Update UI
+            document.querySelectorAll('.provider-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.provider === provider);
+            });
+            
+            document.querySelectorAll('.provider-config').forEach(config => {
+                config.classList.toggle('active', config.id === `config-${provider}`);
+            });
+        }
+
+        function loadConfiguration() {
+            // Load saved API keys and settings
+            Object.keys(realAI.apiConfig).forEach(provider => {
+                const keyInput = document.getElementById(`${provider}-key`);
+                if (keyInput && realAI.apiConfig[provider].apiKey) {
+                    keyInput.value = realAI.apiConfig[provider].apiKey;
+                }
+                
+                // Load model selection
+                const modelSelect = document.getElementById(`${provider}-model`);
+                const savedModel = localStorage.getItem(`anxietyflow_${provider}_model`);
+                if (modelSelect && savedModel) {
+                    modelSelect.value = savedModel;
+                }
+            });
+
+            // Load Ollama URL
+            const ollamaUrl = localStorage.getItem('anxietyflow_ollama_url');
+            if (ollamaUrl) {
+                document.getElementById('ollama-url').value = ollamaUrl;
+            }
+
+            // Select default provider
+            const savedProvider = localStorage.getItem('anxietyflow_current_provider') || 'openai';
+            selectProvider(savedProvider);
+        }
+
+        async function testConnection(provider) {
+            const statusEl = document.getElementById(`status-${provider}`);
+            const testBtn = document.querySelector(`#config-${provider} .test-btn`);
+            
+            // Update UI
+            statusEl.className = 'connection-status testing';
+            statusEl.textContent = 'Probando conexión...';
+            testBtn.disabled = true;
+            
+            try {
+                // Save current config first
+                saveProviderConfig(provider);
+                
+                // Test connection
+                const result = await realAI.testConnection(provider);
+                
+                if (result.success) {
+                    statusEl.className = 'connection-status success';
+                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> ¡Conexión exitosa!';
+                } else {
+                    statusEl.className = 'connection-status error';
+                    statusEl.innerHTML = `<i class="fas fa-times-circle"></i> Error: ${result.error}`;
+                }
+            } catch (error) {
+                statusEl.className = 'connection-status error';
+                statusEl.innerHTML = `<i class="fas fa-times-circle"></i> Error: ${error.message}`;
+            } finally {
+                testBtn.disabled = false;
+            }
+        }
+
+        function saveProviderConfig(provider) {
+            const keyInput = document.getElementById(`${provider}-key`);
+            const modelSelect = document.getElementById(`${provider}-model`);
+            
+            if (keyInput && keyInput.value) {
+                realAI.setAPIKey(provider, keyInput.value);
+            }
+            
+            if (modelSelect) {
+                localStorage.setItem(`anxietyflow_${provider}_model`, modelSelect.value);
+                realAI.apiConfig[provider].model = modelSelect.value;
+            }
+            
+            // Save Ollama URL
+            if (provider === 'ollama') {
+                const urlInput = document.getElementById('ollama-url');
+                if (urlInput) {
+                    localStorage.setItem('anxietyflow_ollama_url', urlInput.value);
+                    realAI.apiConfig.ollama.baseURL = urlInput.value + '/api';
+                }
+            }
+        }
+
+        function saveConfiguration() {
+            // Save all provider configs
+            Object.keys(realAI.apiConfig).forEach(provider => {
+                saveProviderConfig(provider);
+            });
+            
+            // Save current provider
+            localStorage.setItem('anxietyflow_current_provider', activeProvider);
+            realAI.setProvider(activeProvider);
+            
+            // Show success message
+            const btn = document.querySelector('.save-config');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> ¡Configuración guardada!';
+            btn.style.background = 'var(--gradient-success)';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = 'var(--gradient-success)';
+            }, 2000);
+            
+            // Enable real AI in main app
+            localStorage.setItem('anxietyflow_use_real_ai', 'true');
+        }
+
+        // Auto-save on input change
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input[type="password"], input[type="text"], select')) {
+                const provider = e.target.id.split('-')[0];
+                if (realAI.apiConfig[provider]) {
+                    // Clear previous status
+                    const statusEl = document.getElementById(`status-${provider}`);
+                    if (statusEl) {
+                        statusEl.textContent = '';
+                        statusEl.className = 'connection-status';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
